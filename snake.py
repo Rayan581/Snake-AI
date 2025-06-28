@@ -303,9 +303,23 @@ def main():
         text_rect = score_text.get_rect(center=(WIDTH // 2, 20))
         shadow_rect = score_text.get_rect(
             center=(WIDTH // 2 + 1, 20 + 1))
-
+        
         screen.blit(score_text, text_rect)
         screen.blit(shadow, shadow_rect)
+
+        # Write human or ai at top right corner of screen
+        mode_text = FONT.render(
+            "Mode: AI" if is_ai else "Mode: Human", True, (255, 255, 255))
+        mode_shadow = FONT.render(
+            "Mode: AI" if is_ai else "Mode: Human", True, (0, 0, 0))
+        
+        mode_rect = mode_text.get_rect(topright=(WIDTH - 20, 20))
+        mode_shadow_rect = mode_shadow.get_rect(
+            topright=(WIDTH - 20 + 1, 20 + 1))
+        
+        screen.blit(mode_text, mode_rect)
+        screen.blit(mode_shadow, mode_shadow_rect)
+
 
         # Update display
         pygame.display.flip()
