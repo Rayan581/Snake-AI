@@ -2,6 +2,23 @@ import pygame
 import sys
 import random
 import heapq
+import os
+
+HIGHSCORE_FILE = "highscore.txt"
+
+def load_high_score():
+    if os.path.exists(HIGHSCORE_FILE):
+        with open(HIGHSCORE_FILE, "r") as f:
+            try:
+                return int(f.read())
+            except ValueError:
+                return 0
+    return 0
+
+
+def save_high_score(score):
+    with open(HIGHSCORE_FILE, "w") as f:
+        f.write(str(score))
 
 # Initialize Pygame
 pygame.init()
@@ -15,7 +32,6 @@ BG_COLOR = (30, 30, 30)  # Dark gray background
 CELL_SIZE = 20
 CELLS_X, CELLS_Y = WIDTH // CELL_SIZE, HEIGHT // CELL_SIZE
 is_ai = False  # Set to True to enable AI mode
-
 
 class Food:
     def __init__(self, snake):
@@ -252,6 +268,8 @@ def main():
     snake = Snake()
     food = Food(snake)
 
+    high_score = load_high_score()
+
     move_delay = max(10, 150 - len(snake.body) * 2)
     last_move_time = pygame.time.get_ticks()
 
@@ -289,6 +307,10 @@ def main():
             else:
                 print("Snake died!")
                 print("Final Score: ", snake.score)
+                if snake.score > high_score:
+                    print("🎉 NEW HIGH SCORE! 🎉")
+                    high_score = snake.score
+                    save_high_score(high_score)
                 running = False
 
         # Drawing goes here
@@ -306,6 +328,17 @@ def main():
         
         screen.blit(score_text, text_rect)
         screen.blit(shadow, shadow_rect)
+
+        high_text = FONT.render(
+            f"High Score: {high_score}", True, (255, 215, 0))  # Gold color
+        high_shadow = FONT.render(f"High Score: {high_score}", True, (0, 0, 0))
+
+        high_rect = high_text.get_rect(center=(WIDTH // 2, 50))
+        high_shadow_rect = high_text.get_rect(center=(WIDTH // 2 + 1, 50 + 1))
+
+        screen.blit(high_text, high_rect)
+        screen.blit(high_shadow, high_shadow_rect)
+
 
         # Write human or ai at top right corner of screen
         mode_text = FONT.render(
