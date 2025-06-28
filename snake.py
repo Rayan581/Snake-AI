@@ -278,10 +278,10 @@ def main():
         # Game logic goes here
         current_time = pygame.time.get_ticks()
         if current_time - last_move_time > move_delay:
-            snake.update()
             if is_ai and not snake.moves:
                 next_move = snake.decide_move_astar(food)
                 snake.moves.append(next_move)
+            snake.update()
             last_move_time = current_time
 
             if snake.detect_collision(food):
