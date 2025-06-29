@@ -156,7 +156,7 @@ class Snake:
         # If all moves are bad, YOLO into death
         return self.direction
 
-    def decide_move_astar(self, food):
+    def decide_move_smarter(self, food):
         def get_neighbors(pos):
             x, y = pos
             neighbors = [
@@ -297,7 +297,7 @@ def main():
         current_time = pygame.time.get_ticks()
         if current_time - last_move_time > move_delay:
             if is_ai and not snake.moves:
-                next_move = snake.decide_move_astar(food)
+                next_move = snake.decide_move_smarter(food)
                 snake.moves.append(next_move)
             snake.update()
             last_move_time = current_time
